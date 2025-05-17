@@ -1,0 +1,17 @@
+.form-control{
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    justify-content: center;
+    align-items: center;
+}
+.loading{
+   font-size: 300px;
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   z-index: 65;
+   flex-wrap: nowrap;
+   transform: translate(-50px,-50px);
+   
+}

@@ -1,0 +1,25 @@
+.contact-header {
+    background-image: url('https://source.unsplash.com/1600x500/?contact,communication');
+    background-size: cover;
+    background-position: center;
+    height: 280px;
+  }
+  
+  .contact-header h1,
+  .contact-header p {
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+  }
+  
+  .contact-content form .form-control {
+    border-radius: 6px;
+    box-shadow: none;
+  }
+  
+  .contact-content form .btn {
+    font-weight: bold;
+  }
+  
+  .map-section {
+    margin-top: 40px;
+  }
+  

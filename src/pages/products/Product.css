@@ -1,0 +1,16 @@
+.product-card {
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    transition: 0.3s ease-in-out;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.md-5 {
+    margin-bottom: 50px;
+}
+
+.category {
+    margin-top: 10px;
+}

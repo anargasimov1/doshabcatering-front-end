@@ -1,0 +1,12 @@
+.hero {
+    background-image: url('https://source.unsplash.com/1600x600/?food');
+    background-size: cover;
+    background-position: center;
+    padding: 100px 0;
+  }
+  
+  .overlay {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 100px 0;
+  }
+  

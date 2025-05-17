@@ -1,0 +1,38 @@
+.privacy-page {
+    max-width: 900px;
+    margin: auto;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .privacy-page h1 {
+    color: #343a40;
+  }
+  
+  .privacy-content {
+    background: #f9f9f9;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .privacy-content h4 {
+    color: #333;
+    margin-top: 24px;
+    font-weight: bold;
+  }
+  
+  .privacy-content p {
+    color: #555;
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+  
+  .privacy-content ul {
+    list-style-type: none;
+    padding-left: 20px;
+  }
+  
+  .privacy-content ul li {
+    margin: 5px 0;
+  }
+  
