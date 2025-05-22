@@ -10,7 +10,7 @@ export const UpdatePassword = () => {
 
                 <form className="container-card container">
                     <div className="card p-5 shadow-lg" style={{ maxWidth: "600px", width: "100%", borderRadius: "15px", alignItems: "center" }}>
-                        <p class="fw-medium text-info">Zəhmət olmasa emailinizə göndərilən 6 rəqəmli otp kodu və yeni parolu daxil edin!</p>
+                        <p className="fw-medium text-info">Zəhmət olmasa emailinizə göndərilən 6 rəqəmli otp kodu və yeni parolu daxil edin!</p>
 
                         <div className="form-label mb-4 ">
                             <label className="mb-2" htmlFor="otp">OTP Kod</label>

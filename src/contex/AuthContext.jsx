@@ -1,10 +1,10 @@
-import { createContext, use, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 export const AuthContext = createContext();
 
 const AuthPrivader = ({ children }) => {
 
-    const url = "http://localhost:8080/auth";
+    const url = process.env.REACT_APP_URL;
 
     const [toggle, setToggle] = useState(false)
     const [name, setName] = useState("");
@@ -80,8 +80,6 @@ const AuthPrivader = ({ children }) => {
     const handleLoginSubmit = e => {
         e.preventDefault();
 
-
-
         let loginform;
 
         if (email !== "" & password !== "") {
@@ -89,7 +87,7 @@ const AuthPrivader = ({ children }) => {
             setToggle(true)
             loginform = { email, password }
 
-            fetch(`${url}/login`, {
+            fetch(`${url}/auth/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -98,8 +96,8 @@ const AuthPrivader = ({ children }) => {
             }).then(r => {
 
                 if (r.ok) {
-                    // localStorage.setItem("login", true)
-                    // window.location.href = "/"
+                    // localStorage.setItem("135678", true)
+                    window.location.href = "/"
 
                     setToggle(false)
                     r.json().then(r => console.log(r.userInfo))
@@ -116,7 +114,7 @@ const AuthPrivader = ({ children }) => {
                         if (!r.email) {
                             alert(r.errorMessage)
                         }
-                        
+
                     })
                     setToggle(false)
                 }
@@ -130,7 +128,7 @@ const AuthPrivader = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ setName, error, setSurname, setPassword, setEmail, setPhone_number, loginForm, SetLoginForm, handleRegistSubmit, handleLoginSubmit, handleChangeLogin, toggle }}>
+        <AuthContext.Provider value={{ setName, error, setSurname, setPassword, setEmail, setPhone_number, handleRegistSubmit, handleLoginSubmit, handleChangeLogin, toggle }}>
             {children}
         </AuthContext.Provider>
     )

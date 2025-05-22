@@ -15,7 +15,7 @@ export const SendOtp = () => {
 
                 <form className="container-card container">
                     <div className="card p-5 shadow-lg" style={{ maxWidth: "600px", width: "100%", borderRadius: "15px", alignItems: "center" }}>
-                        <p class="fw-medium">Zəhmət olmasa emailnizi daxil edin</p>
+                        <p className="fw-medium">Zəhmət olmasa emailnizi daxil edin</p>
 
                         <div className="form-floating mb-3 ">
                             <input

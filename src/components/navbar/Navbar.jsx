@@ -26,7 +26,7 @@ export const Navbar = () => {
                 </button>
 
                 <div className="collapse navbar-collapse" id="navbarNavDropdown">
-                    {/* Sol tərəf */}
+
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                         <li className="nav-item">
                             <a className="nav-link active" aria-current="page" href="/">Ana Səhifə</a>
@@ -42,6 +42,13 @@ export const Navbar = () => {
                         </li>
                     </ul>
 
+                    <div className="soph">
+                        <button onClick={() => { window.location.href = "/shop" }} className='btn btn-success shopi'>
+                            <i className="fa-solid fa-cart-shopping"></i>
+                            <p className='count'>0</p>
+                        </button>
+                    </div>
+
                     {toggle ? <div className="d-flex">
                         <a href="/login" className="btn btn-outline-light me-2">Daxil ol</a>
                         <a href="/register" className="btn btn-warning">Qeydiyyat</a>
@@ -52,6 +59,9 @@ export const Navbar = () => {
                     </div>}
                 </div>
             </div>
+
+
+
         </nav>
 
     )

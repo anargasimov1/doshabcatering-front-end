@@ -1,4 +1,3 @@
-import React from 'react';
 
 const lunchItems = [
   {
@@ -37,9 +36,9 @@ export default function BusinessLunch() {
         <h2 className="text-center mb-4">Business Lunch Menyular</h2>
         <div className="row">
           {lunchItems.map((item, idx) => (
-            <div className="col-md-4 " key={idx}>
+            <div className="col-md-4" key={idx}>
               <div className="card mb-4 text-bg-secondary">
-                <img src={item.img} className="card-img-top" alt={item.title} />
+                <img src="https://www.morrisons.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Ffood-to-order-products.c9b04881.jpg&w=1920&q=75" className="card-img-top" alt={item.title} />
                 <div className="card-body">
                   <h5 className="card-title">{item.title}</h5>
                   <p className="card-text">{item.desc}</p>
