@@ -15,7 +15,7 @@ export const About = () => {
                         <div className="row mb-5 align-items-center">
                             <div className="col-md-6 mb-4 mb-md-0">
                                 <img
-                                    src="https://scontent.fgyd18-1.fna.fbcdn.net/v/t39.30808-6/484355748_9345182685569910_563980415146066143_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=101&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=m8XQgMr5inIQ7kNvwHE78AU&_nc_oc=AdkeZLKvmK0Za99maFoJ2Q5zgP4ZTVvsMQb-WrLN_QIolIXNwCY67Yi5Uh-CzBZaL84&_nc_zt=23&_nc_ht=scontent.fgyd18-1.fna&_nc_gid=lopVOAt9X9uiXI2RTNQiEw&oh=00_AfGEgr1oJ4bXDRJr9c45fdfohuhHWEGDq5B6rMt7TCmjFA&oe=6809AEFD"
+                                    src={require('../../images/1689229526267493808_n.jpg')}
                                     alt="Komanda şəkli"
                                     className="img-fluid rounded shadow"
                                 />
@@ -23,7 +23,7 @@ export const About = () => {
                             <div className="col-md-6">
                                 <h4 className="fw-semibold mb-3">Biz kimik və niyə seçilirik?</h4>
                                 <p>
-                                    LəzzətliYemək.az olaraq 2022-ci ildən bəri yemək çatdırılmasına yeni bir nəfəs gətirmək üçün yola çıxmışıq. Ənənəvi dadları müasir təqdimatla birləşdirərək, müştərilərimizə həm ləzzətli, həm də sağlam alternativlər təqdim edirik. Sürətli həyat tərzində vaxtınıza qənaət edərək evinizə və ofisinizə restoran keyfiyyətində yeməklər çatdırırıq.
+                                    Doshabcatering.az olaraq 2022-ci ildən bəri yemək çatdırılmasına yeni bir nəfəs gətirmək üçün yola çıxmışıq. Ənənəvi dadları müasir təqdimatla birləşdirərək, müştərilərimizə həm ləzzətli, həm də sağlam alternativlər təqdim edirik. Sürətli həyat tərzində vaxtınıza qənaət edərək evinizə və ofisinizə restoran keyfiyyətində yeməklər çatdırırıq.
                                 </p>
                             </div>
                         </div>
@@ -32,7 +32,7 @@ export const About = () => {
                         <div className="row mb-5 align-items-center flex-md-row-reverse">
                             <div className="col-md-6 mb-4 mb-md-0">
                                 <img
-                                    src="https://source.unsplash.com/600x400/?fresh-food,organic"
+                                    src={require('../../images/Pəhriz çörək.jpg')}
                                     alt="Ərzaqlar"
                                     className="img-fluid rounded shadow"
                                 />
@@ -52,7 +52,7 @@ export const About = () => {
                         <div className="row mb-5 align-items-center">
                             <div className="col-md-6 mb-4 mb-md-0">
                                 <img
-                                    src="https://source.unsplash.com/600x400/?technology,app"
+                                    src={require('../../images/9.jpg')}
                                     alt="Texnologiya"
                                     className="img-fluid rounded shadow"
                                 />
@@ -72,7 +72,7 @@ export const About = () => {
                         <div className="row mb-5 align-items-center flex-md-row-reverse">
                             <div className="col-md-6 mb-4 mb-md-0 text-center">
                                 <img
-                                    src="/images/certificate.jpg"
+                                    src={require('../../images/sertifikat.jpg')}
                                     alt="Sertifikat"
                                     className="img-fluid rounded shadow"
                                 />
@@ -80,7 +80,7 @@ export const About = () => {
                             <div className="col-md-6">
                                 <h4 className="fw-semibold mb-3">Sağlamlıq və təhlükəsizlik ön plandadır</h4>
                                 <p>
-                                    LəzzətliYemək.az olaraq, qida təhlükəsizliyi sahəsində ciddi standartlara əməl edirik. ISO 22000:2018 qida təhlükəsizliyi menecment sisteminə uyğun fəaliyyət göstəririk. Hər işçimiz gigiyena və qida təhlükəsizliyi üzrə təlimlər alır.
+                                    Doshabcatering.az olaraq, qida təhlükəsizliyi sahəsində ciddi standartlara əməl edirik. ISO 22000:2018 qida təhlükəsizliyi menecment sisteminə uyğun fəaliyyət göstəririk. Hər işçimiz gigiyena və qida təhlükəsizliyi üzrə təlimlər alır.
                                 </p>
                                 <p>
                                     Məqsədimiz sadəcə doyuzdurmaq deyil — sizi sağlam saxlamaq, rahatlaşdırmaq və sevindirməkdir.

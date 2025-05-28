@@ -1,15 +1,28 @@
 import './Sendotp.css';
 import { Navbar } from '../../components/navbar/Navbar'
 import { AuthContext } from '../../contex/AuthContext';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
+import { HashLoader } from 'react-spinners';
 
 export const SendOtp = () => {
 
-    const { setEmail, error } = useContext(AuthContext)
+    useEffect(() => {
+        const isLogged = localStorage.getItem('logged');
+        if (isLogged) {
+            window.location.href = '/'
+        }
+
+    }, [])
+
+    const { setEmail, error, sendotpForUpdatePassword, toggle } = useContext(AuthContext)
 
     return (
         <>
             <Navbar />
+
+            {toggle && <div className='loading'>
+                <HashLoader  color="#fbbf24" size={150} />
+            </div>}
 
             <div className="otp bg-light">
 
@@ -19,7 +32,7 @@ export const SendOtp = () => {
 
                         <div className="form-floating mb-3 ">
                             <input
-                                style={{ width: "400px" }}
+                                style={{ width: "300px" }}
                                 type="email"
                                 className='form-control'
                                 id="email"
@@ -33,7 +46,7 @@ export const SendOtp = () => {
                         </div>
 
                         <div className="d-grid btn-send">
-                            <button type="button" className="btn btn-primary btn-lg" style={{ width: "400px" }} >
+                            <button type='button' onClick={e => sendotpForUpdatePassword(e)} className="btn btn-primary btn-lg" style={{ width: "300px" }} >
                                 Göndər
                             </button>
                         </div>

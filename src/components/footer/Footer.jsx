@@ -30,16 +30,16 @@ const Footer = () => {
                     <div className="col-md-4 mb-4">
                         <h5 className="mb-3">Bizi izləyin</h5>
                         <div className="d-flex gap-3">
-                            <a href="#" className="text-light fs-4">
+                            <a href="https://www.facebook.com/profile.php?id=100082949757687" className="text-light fs-4">
                                 <i className="fab fa-facebook-f"></i>
                             </a>
-                            <a href="#" className="text-light fs-4">
+                            <a href="https://www.instagram.com/doshabcatering/" className="text-light fs-4">
                                 <i className="fab fa-instagram"></i>
                             </a>
-                            <a href="#" className="text-light fs-4">
+                            <a href="https://wa.link/hf9he3" className="text-light fs-4">
                                 <i className="fab fa-whatsapp"></i>
                             </a>
-                            <a href="#" className="text-light fs-4">
+                            <a href="https://www.tiktok.com/@doshabcatering" className="text-light fs-4">
                                 <i className="fab fa-tiktok"></i>
                             </a>
                         </div>

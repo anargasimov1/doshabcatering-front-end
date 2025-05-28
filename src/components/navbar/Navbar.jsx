@@ -1,15 +1,15 @@
-import React, { useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import "./Navbar.css"
+import { ProductsContext } from '../../contex/ProductsContext';
 
 export const Navbar = () => {
-
-    let login = localStorage.getItem("login");
-    const [toggle, setToggle] = useState(!login)
+    
+    const { getLocalStronge } = useContext(ProductsContext)
 
 
     return (
 
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark bg-gradient">
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark bg-gradient fixed">
             <img src={require("../../images/logo.jpg")} className='logo' alt="" />
             <div className="container">
                 <a style={{ color: '#9C132E' }} className="navbar-brand" href="/">Doshabcatering</a>
@@ -45,17 +45,19 @@ export const Navbar = () => {
                     <div className="soph">
                         <button onClick={() => { window.location.href = "/shop" }} className='btn btn-success shopi'>
                             <i className="fa-solid fa-cart-shopping"></i>
-                            <p className='count'>0</p>
+                            <p className='count'>{getLocalStronge().length}</p>
                         </button>
                     </div>
 
-                    {toggle ? <div className="d-flex">
+
+
+                    {localStorage.getItem("logged") ? <div className='d-flex' style={{ borderRadius: "50%", width: "40px", height: "40px", alignItems: "center", justifyContent: "center" }}>
+                        <a href="/profile" rel="noopener noreferrer">
+                            <i style={{ color: 'white', fontSize: "30px" }} className="fa-regular fa-circle-user"></i>
+                        </a>
+                    </div> : <div className="d-flex">
                         <a href="/login" className="btn btn-outline-light me-2">Daxil ol</a>
                         <a href="/register" className="btn btn-warning">Qeydiyyat</a>
-                    </div> : <div className='d-flex bg-light' style={{ borderRadius: "50%", width: "40px", height: "40px", alignItems: "center", justifyContent: "center" }}>
-                        <a href="/profile" rel="noopener noreferrer">
-                            <i style={{ fontSize: "30px" }} className="fa-solid fa-user-tie"></i>
-                        </a>
                     </div>}
                 </div>
             </div>

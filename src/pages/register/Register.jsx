@@ -1,18 +1,30 @@
 import './Register.css';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Navbar } from '../../components/navbar/Navbar';
 import { AuthContext } from '../../contex/AuthContext';
+import { HashLoader } from 'react-spinners';
 
 export const Register = () => {
     const [checked, setChecked] = useState(false);
-    const { handleRegistSubmit, error, setName, setSurname, setEmail, setPassword, setPhone_number } = useContext(AuthContext);
+    const { handleRegistSubmit, error, setName, setSurname, setEmail, setPassword, setPhone_number, toggle } = useContext(AuthContext);
 
     const handleChange1 = e => setChecked(e.target.checked);
 
+    useEffect(() => {
+        let isLogged = localStorage.getItem('logged')
+        if (isLogged) {
+            window.location.href = "/"
+        }
+
+    }, [])
 
     return (
         <>
             <Navbar />
+
+            {toggle && <div className='d-flex justify-content-center align-items-center' style={{ zIndex: "55", position: "absolute", height: "100vh", width: "100%" }}>
+                <HashLoader color="#fbbf24" size={150} />
+            </div>}
 
             <div className="register-page d-flex align-items-center justify-content-center" style={{
                 minHeight: "100vh",
@@ -32,7 +44,6 @@ export const Register = () => {
                                 type="text"
                                 className='form-control'
                                 id="name"
-                                name="name"
                                 placeholder="Ad"
                                 onChange={e => setName(e.target.value)}
                                 required
@@ -46,7 +57,6 @@ export const Register = () => {
                                 type="text"
                                 className="form-control"
                                 id="surname"
-                                name="surname"
                                 placeholder="Soyad"
                                 onChange={e => setSurname(e.target.value)}
                                 required
@@ -60,7 +70,6 @@ export const Register = () => {
                                 type="email"
                                 className='form-control'
                                 id="email"
-                                name="email"
                                 placeholder="Email"
                                 onChange={e => setEmail(e.target.value)}
                                 required
@@ -74,7 +83,6 @@ export const Register = () => {
                                 type="number"
                                 className='form-control'
                                 id="phone"
-                                name="phone_number"
                                 placeholder="+994551234567"
                                 onChange={e => setPhone_number(e.target.value)}
                                 required
@@ -88,7 +96,6 @@ export const Register = () => {
                                 type="password"
                                 className='form-control'
                                 id="password"
-                                name="password"
                                 placeholder="Şifrə"
                                 onChange={e => setPassword(e.target.value)}
                                 required

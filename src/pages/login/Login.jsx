@@ -1,18 +1,25 @@
 import './Login.css'
 import { Navbar } from '../../components/navbar/Navbar'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { AuthContext } from '../../contex/AuthContext'
 import { HashLoader } from 'react-spinners';
 
 export const Login = () => {
 
+  useEffect(() => {
+    let isLogged = localStorage.getItem('logged')
+    if (isLogged) {
+      window.location.href = "/"
+    }
 
-  const { loginForm, handleLoginSubmit, handleChangeLogin, toggle, error, setEmail, setPassword } = useContext(AuthContext)
+  }, []);
+
+  const { handleLoginSubmit, toggle, error, setEmail, setPassword } = useContext(AuthContext)
 
   return (
     <>
       <Navbar />
-      {toggle && <div className='loading'>
+      {toggle && <div className='d-flex justify-content-center align-items-center' style={{ zIndex: "55", position: "absolute", height: "100vh", width: "100%" }}>
         <HashLoader color="#fbbf24" size={150} />
       </div>}
 
@@ -46,7 +53,7 @@ export const Login = () => {
                     <button onClick={handleLoginSubmit} type="submit" className="btn btn-primary btn-lg">Daxil Ol</button>
                   </div>
 
-                  <p className="text-center text-muted">
+                  <p style={{ display: 'flex', flexDirection: "column" }} className="text-center text-muted">
                     <a className="text-decoration-none" href="/sendotp">Parolu unutdum</a>
                     Hesabın yoxdur? <a href="/register" className="text-decoration-none">Qeydiyyatdan keç</a>
                   </p>

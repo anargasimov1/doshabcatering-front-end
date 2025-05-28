@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-
+import Swal from "sweetalert2";
 export const ProductsContext = createContext();
 
 const ProductsProvider = ({ children }) => {
@@ -10,9 +10,11 @@ const ProductsProvider = ({ children }) => {
     const [products, setProducts] = useState([]);
     const [category, setCategory] = useState("suplar");
     const [toggle, setToggle] = useState(false);
-    const [sum, setSum] = useState(0);
+    const [modal, setModal] = useState(false);
+    const [sum, setSum] = useState(0.00);
+    const [location, setLocation] = useState({ lat: null, lon: null, error: null });
 
-    useEffect(() => { getCategorys(); getProducts(); getSum() }, []);
+    useEffect(() => { getCategorys(); getProducts(); getSum(); getLocation() }, []);
 
     const getProducts = () => fetch(`${url}/public/meals`).then(r => r.json()).then(g => setProducts(g));
 
@@ -28,8 +30,29 @@ const ProductsProvider = ({ children }) => {
         return products;
     }
 
+    const getLocation = () => {
+
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    setLocation({
+                        lat: position.coords.latitude,
+                        lon: position.coords.longitude,
+                        error: null,
+                    });
+                },
+                (error) => {
+                    setLocation({ lat: null, lon: null, error: error.message });
+                }
+            );
+        } else {
+            setLocation({ lat: null, lon: null, error: "Geolocation not supported" });
+        }
+    };
+
+
     const countPlus = id => {
-        getSum()
+        getSum();
         let seleceteds = getLocalStronge();
         let findById = seleceteds.find(i => i.id === id)
         findById.count++;
@@ -69,6 +92,7 @@ const ProductsProvider = ({ children }) => {
 
 
     const addProductToLocalStronge = product => {
+        setToggle(!toggle)
         let products = getLocalStronge();
         const alreadyExists = products.some((p) => p.id === product.id);
 
@@ -84,26 +108,84 @@ const ProductsProvider = ({ children }) => {
 
     }
 
-    const select = category => products.filter(i => i.category.name.includes(category));
-
-    const send = () => {
-
-        let details = {
-            meals: getLocalStronge(),
-            sum: sum,
-            location: "49.25, 49.44"
-
-        }
-
-        console.log(details)
+    const removeProductIsLocal = id => {
+        let allProducts = getLocalStronge();
+        let filtered = allProducts.filter(i => i.id !== id);
+        localStorage.setItem("products", JSON.stringify(filtered));
+        setToggle(!toggle);
+        getSum()
 
     }
 
+    const select = category => products.filter(i => i.category.name.includes(category));
+
+    const send = () => {
+        setModal(true)
+
+        let meals = getLocalStronge();
+        let copyMeals = [];
+        let email = localStorage.getItem("email")
+
+        for (let i = 0; i < meals.length; ++i) {
+            copyMeals.push("Məhsul  " + meals[i].name + " sayı " + meals[i].count)
+        }
+
+        let details = {
+            meals: copyMeals.toString(),
+            prince: sum.toFixed(2),
+            lat: location.lat,
+            lng: location.lon
+
+        }
+
+
+        fetch(`${url}/orders/${email}`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+                // "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(details)
+        }).then(r => {
+            if (r.ok) {
+                localStorage.removeItem("products");
+                setModal(false);
+                Swal.fire(
+                    'Təşəkkürlər!',
+                    'Sifarişiniz qəbul olundu 🚀',
+                    'success'
+                );
+            }
+            if (r.status === 403) {
+                setModal(false);
+                alert("Zəhmət olmasa emaili təsdiq edin!")
+
+            }
+            if (r.status === 401) {
+                setModal(false);
+                Swal.fire(
+                    'Xəta!',
+                    'Sifarişiniz qəbul olunmadı',
+                    'warning'
+                );
+            }
+        })
+    }
+
+
+
     return (
-        <ProductsContext value={{ categorys, select, category, setCategory, addProductToLocalStronge, getLocalStronge, countPlus, toggle, countMinus, sum, getSum, send }}>
+        <ProductsContext value={{
+            categorys, select, category,
+            setCategory, addProductToLocalStronge,
+            getLocalStronge, countPlus, toggle, countMinus,
+            sum, getSum, send, removeProductIsLocal, getLocation, location, modal
+        }}>
             {children}
         </ProductsContext>
     )
+
 }
 
 export default ProductsProvider;

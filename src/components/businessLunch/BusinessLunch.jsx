@@ -1,53 +1,42 @@
-
-const lunchItems = [
-  {
-    title: "Bazar Ertəsi Menyusu",
-    desc: "Toyuq kotleti + kartof + salat",
-    img: "https://source.unsplash.com/400x250/?lunch"
-  },
-  {
-    title: "Çərşənbə Axşamı",
-    desc: "Plov + şorba + kompot",
-    img: "https://source.unsplash.com/400x250/?rice"
-  },
-  {
-    title: "Çərşənbə",
-    desc: "Ətli makaron + salat",
-    img: "https://source.unsplash.com/400x250/?pasta"
-  }
-  ,
-  {
-    title: "Cümə Axşamı",
-    desc: "Ətli makaron + salat",
-    img: "https://source.unsplash.com/400x250/?pasta"
-  }
-  ,
-  {
-    title: "Cümə",
-    desc: "Ətli makaron + salat",
-    img: "https://source.unsplash.com/400x250/?pasta"
-  }
-];
+import { useEffect, useState } from 'react';
 
 export default function BusinessLunch() {
+
+  const [lunchItems, setLunchItems] = useState([]);
+
+  useEffect(() => {
+    fetch("https://doshabcatering.az/node/api/all")
+      .then(r => r.json())
+      .then(r => setLunchItems(r))
+  })
+
+
+
   return (
-    <section className="bg-light py-5">
-      <div className="container">
-        <h2 className="text-center mb-4">Business Lunch Menyular</h2>
-        <div className="row">
-          {lunchItems.map((item, idx) => (
-            <div className="col-md-4" key={idx}>
-              <div className="card mb-4 text-bg-secondary">
-                <img src="https://www.morrisons.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Ffood-to-order-products.c9b04881.jpg&w=1920&q=75" className="card-img-top" alt={item.title} />
-                <div className="card-body">
-                  <h5 className="card-title">{item.title}</h5>
-                  <p className="card-text">{item.desc}</p>
-                </div>
+    <div className="container py-5">
+      <h1 className="text-center mb-5 display-5 fw-bold text-success">🍱 Bussines Lunch</h1>
+      <div className="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
+        {lunchItems.map((item, idx) => (
+          <div className="col" key={idx}>
+            <div className="card shadow-sm lunch-card h-100 border-0 bg-primary-subtle">
+              <div className="card-header bg-success text-white text-center">
+                <h5 className="mb-0">{item.weekday}</h5>
+              </div>
+              <div className="card-body d-flex flex-column">
+                <p className="card-text flex-grow-1">
+                  <ul>
+                    {item.menu.split(" ").map(i => {
+                      return (
+                        <li>{i}</li>
+                      )
+                    })}
+                  </ul>
+                </p>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
-    </section>
+    </div>
   );
 }

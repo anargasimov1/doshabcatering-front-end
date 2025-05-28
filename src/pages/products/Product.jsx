@@ -2,7 +2,6 @@ import { useContext } from 'react'
 import { Navbar } from "../../components/navbar/Navbar"
 import "./Product.css"
 import { ProductsContext } from '../../contex/ProductsContext'
-
 export const Product = () => {
 
     const { categorys, select, category, setCategory, addProductToLocalStronge } = useContext(ProductsContext)
@@ -10,6 +9,7 @@ export const Product = () => {
     return (
         <>
             <Navbar />
+
 
             <div className="container my-5">
                 <h2 className="fw-bold">Bizim Məhsullar</h2>
@@ -33,7 +33,7 @@ export const Product = () => {
                         <div className="col-md-3 mb-3" key={index}>
                             <div className="card product-card text-center h-100">
                                 <div className="position-relative">
-                                    <img src={product.img} className="card-img-top p-4" alt={product.name} />
+                                    <img style={{ maxHeight: "200px",maxWidth:"250px", objectFit: "cover" }} src={product.imageUrl} className="card-img-top p-4" alt={product.name} />
                                 </div>
                                 <div className="card-body">
                                     <h5 className="card-title">{product.name}</h5>

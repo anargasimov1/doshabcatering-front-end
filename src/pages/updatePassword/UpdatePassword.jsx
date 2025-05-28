@@ -1,7 +1,20 @@
+import { useContext, useEffect } from 'react'
 import { Navbar } from '../../components/navbar/Navbar'
-import './UpdatePassword.css'
+import { AuthContext } from '../../contex/AuthContext'
 
 export const UpdatePassword = () => {
+
+    useEffect(() => {
+        const isLogged = localStorage.getItem('logged');
+        if (isLogged) {
+            window.location.href = '/'
+        }
+
+    }, [])
+
+
+    const { setOtp, setPassword, setConformPassword, updatepassword, error } = useContext(AuthContext)
+
     return (
         <>
 
@@ -15,53 +28,52 @@ export const UpdatePassword = () => {
                         <div className="form-label mb-4 ">
                             <label className="mb-2" htmlFor="otp">OTP Kod</label>
                             <input
-                                style={{ width: "400px" }}
+                                style={{ width: "300px" }}
                                 type="text"
                                 className='form-control'
                                 id="otp"
-                                name="otp"
                                 placeholder="Otp Kod"
-                                // onChange={e => setEmail(e.target.value)}
+                                onChange={e => setOtp(e.target.value)}
                                 required
                             />
 
-                            {/* {error.email && <div className="text-danger">{error.email}</div>} */}
                         </div>
 
                         <div className="form-label mb-4 ">
-                            <label className="mb-2" htmlFor="otp">Yeni Parol</label>
+                            <label className="mb-2" htmlFor="password">Yeni Parol</label>
                             <input
-                                style={{ width: "400px" }}
+                                style={{ width: "300px" }}
                                 type="password"
                                 className='form-control'
-                                id="otp"
+                                id="password"
                                 name="otp"
                                 placeholder="Yeni Parol"
-                                // onChange={e => setEmail(e.target.value)}
+                                onChange={e => setPassword(e.target.value)}
                                 required
                             />
-
-                            {/* {error.email && <div className="text-danger">{error.email}</div>} */}
+                            {error.password && <div className="text-danger">{error.password}</div>}
+                            <div className="form-text mt-1">
+                                6-12 simvol arası, rəqəm və hərf olmalıdır.
+                            </div>
                         </div>
 
                         <div className="form-label mb-4 ">
-                            <label className="mb-2" htmlFor="otp">Parolu təkrar edin</label>
+                            <label className="mb-2" htmlFor="c-password">Parolu təkrar edin</label>
                             <input
-                                style={{ width: "400px" }}
+                                style={{ width: "300px" }}
                                 type="password"
                                 className='form-control'
-                                id="otp"
+                                id="c-password"
                                 name="otp"
                                 placeholder="Parolu təkrar edin"
-                                // onChange={e => setEmail(e.target.value)}
+                                onChange={e => setConformPassword(e.target.value)}
                                 required
                             />
 
-                            {/* {error.email && <div className="text-danger">{error.email}</div>} */}
                         </div>
 
                         <div className="d-grid btn-send">
-                            <button type="button" className="btn btn-primary btn-lg" style={{ width: "400px" }} >
+                            <button onClick={updatepassword} type="button" className="btn btn-primary btn-lg" style={{ width: "300px" }} >
                                 Göndər
                             </button>
                         </div>

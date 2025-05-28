@@ -1,60 +1,188 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Footer from '../../components/footer/Footer';
 import { Navbar } from '../../components/navbar/Navbar';
-import './Profile.css';
-
 
 
 export const Profile = () => {
 
-    useEffect(() => {
+  const url = process.env.REACT_APP_URL
 
-        let login = localStorage.getItem("login")
-        if (login === null || login === false) {
-            window.location.href = "/login"
-        }
-    }, [])
 
-    const user = {
-        name: "Əli Vəliyev",
-        email: "ali@example.com",
-        bio: "Mən bir Fullstack Developerəm. React və Node.js sahəsində ixtisaslaşmışam 🚀",
-        avatar: "https://i.pravatar.cc/300?img=13"
-    };
+  useEffect(() => {
+    let email = localStorage.getItem('email')
 
-    const logout = () => {
-        localStorage.setItem("login", false);
-        window.location.href = "/"
+    if (email) {
+      fetch(`${url}/auth/${email}`).then(r => r.json())
+        .then(r => {
+          if (r !== null) {
+            setOrders(r.orders);
+            setUser(r.userInfo)
+          }
+        }).catch(e => { });
     }
 
-    return (
-        <>
-            <Navbar />
-            <div className="profile-page" style={{ minHeight: "100vh", background: "linear-gradient(135deg, #74ebd5 0%, #acb6e5 100%)", paddingTop: "60px" }}>
-                <div className="container">
-                    <div className="row justify-content-center">
-                        <div className="col-lg-6 col-md-8">
-                            <div className="card shadow-lg p-4" style={{ borderRadius: "20px", backgroundColor: "white" }}>
-                                <div className="text-center">
-                                    <p className='profile_name'>{user.name.substring(0, 1)}</p>
-                                    <h2 className="fw-bold">{user.name}</h2>
-                                    <p className="text-muted">{user.email}</p>
-                                    <p className="mt-3">{user.bio}</p>
-                                    <div className="d-grid gap-2 d-sm-flex justify-content-sm-center mt-4">
-                                        <button onClick={logout} type="button" className="btn btn-outline-danger btn-lg px-4">Çıxış Et</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="text-center text-white mt-4">
-                                <small>© 2025 Əli Vəliyev tərəfindən hazırlanıb</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  }, [])
 
-            <Footer />
-        </>
-    );
+
+
+  const [user, setUser] = useState({
+    name: '',
+    surname: '',
+    email: '',
+    phone_number: '',
+    verified: '',
+    created_at: '',
+  })
+
+
+  const [orders, setOrders] = useState([])
+
+  useEffect(() => {
+
+    let login = localStorage.getItem("logged")
+    if (login === null || login === false) {
+      window.location.href = "/login"
+    }
+  }, [])
+
+
+
+
+  const completedOrders = orders !== undefined && orders.filter((o) => o.status === 'COMPLATE');
+  const activeOrders = orders !== undefined && orders.filter((o) => o.status !== 'COMPLATE');
+
+  const stats = [
+    { label: 'Sifarişlər', value: orders.length },
+    { label: 'Xərclənmiş', value: `${orders.reduce((sum, o) => (sum + Number(o.prince)), 0).toFixed(2)} ₼` },
+  ];
+
+
+  const logout = () => {
+
+    fetch(`${url}/auth/logout`)
+      .then(r => {
+        if (r.ok) {
+          localStorage.removeItem("logged");
+          localStorage.removeItem("email");
+          window.location.href = "/"
+        }
+      }).catch(e => { })
+
+
+  }
+
+  return (
+    <>
+      <Navbar />
+
+      {user.verified ? "" : <div className="alert alert-danger" role="alert">
+        Zəhmat olmasa emailnizi tesdiq edin!
+      </div>}
+      <div className="container my-5">
+        {/* Profile Header */}
+        <div style={{ maxWidth: "640px" }} className="card mb-4 shadow-sm">
+          <div className="card-body d-flex align-items-center">
+            <div
+              className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3"
+              style={{ width: 80, height: 80, fontSize: '1.5rem' }}
+            >
+              {user.name && user.name.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <h4>{user.name} &nbsp; {user.surname}</h4>
+              <p className="text-muted mb-0">{user.email}</p>
+            </div>
+          </div>
+          <button onClick={logout} style={{ maxWidth: "800px" }} className='btn btn-danger'// onClick={handleLogout}
+          >
+            🔒 Çıxış Et
+          </button>
+        </div>
+
+        {/* Dashboard Stats */}
+        <div className="row mb-4">
+          {stats.map((stat, idx) => (
+            <div className="col-md-3 mb-2" key={idx}>
+              <div className="card text-center shadow-sm">
+                <div className="card-body">
+                  <h5 className="card-title">{stat.value}</h5>
+                  <p className="card-text text-muted">{stat.label}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* User Info */}
+        <ul className="list-group mb-4 shadow-sm">
+          <li className="list-group-item">📞 Telefon: {user.phone_number}</li>
+          <li className="list-group-item">🕓 Qeydiyyat: {user.created_at}</li>
+        </ul>
+
+        {/* Active Orders */}
+        <div className="mb-4">
+          <h5 className="text-warning">🟡 Aktiv Sifarişlər</h5>
+          <table className="table table-bordered">
+            <thead className="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Tarix</th>
+                <th>Mehsul</th>
+                <th>Məbləğ</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {activeOrders.map((order) => (
+                <tr key={order.id}>
+                  <td>{order.id}</td>
+                  <td>{order.date}</td>
+                  <td>{order.meals.split("Məhsul")}</td>
+                  <td>{order.prince} ₼</td>
+                  <td style={{
+                    fontWeight: "bold",
+                    color: order.status === "SENDING" && "#314FE8" ||
+                      order.status === "APPROVED" && "#31E837" ||
+                      order.status === "PENDING" && "#9C132E"
+                  }}>
+                    {order.status === "PENDING" && "Gözləyir"}
+                    {order.status === "SENDING" && "Göndərildi"}
+                    {order.status === "APPROVED" && "Təsdiq edildi"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Completed Orders */}
+        <div className="mb-4">
+          <h5 className="text-success">✅ Tamamlanmış Sifarişlər</h5>
+          <table className="table table-bordered">
+            <thead className="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Tarix</th>
+                <th>Mehsul</th>
+                <th>Məbləğ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {completedOrders.map((order) => (
+                <tr key={order.id}>
+                  <td>{order.id}</td>
+                  <td>{order.date}</td>
+                  <td>{order.meals}</td>
+                  <td>{order.prince} ₼</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <Footer />
+    </>
+  );
 };
 

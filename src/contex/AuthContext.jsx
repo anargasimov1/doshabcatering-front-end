@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 
 export const AuthContext = createContext();
 
@@ -9,14 +9,11 @@ const AuthPrivader = ({ children }) => {
     const [toggle, setToggle] = useState(false)
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
-    const [email, setEmail] = useState();
+    const [email, setEmail] = useState('');
     const [phone_number, setPhone_number] = useState("");
     const [password, setPassword] = useState("");
-
-    const [loginForm, SetLoginForm] = useState({
-        email: "",
-        password: "",
-    })
+    const [conformPassword, setConformPassword] = useState('')
+    const [otp, setOtp] = useState('')
 
     const [error, setError] = useState({
         name: "",
@@ -27,22 +24,13 @@ const AuthPrivader = ({ children }) => {
     });
 
 
-
-    const handleChangeLogin = e => {
-        const { name, value } = e.target;
-        SetLoginForm(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
-    }
-
     const handleRegistSubmit = e => {
         e.preventDefault();
-        let formdata;
-        if (name !== "" && surname !== "" & email !== "" & password !== "") {
-            formdata = { name, surname, email, password, phone_number }
 
-            fetch(`${url}/register`, {
+        if (name !== "" && surname !== "" & email !== "" & password !== "") {
+            let formdata = { name, surname, email, password, phone_number }
+            setToggle(true)
+            fetch(`${url}/auth/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -51,12 +39,17 @@ const AuthPrivader = ({ children }) => {
             }).then(r => {
                 if (r.ok) {
                     alert("uğurlu qeydiyyat!")
-                    setTimeout(() => {
-                        window.location.href = "/login"
-                    }, 1000)
+                    setToggle(false)
+                    window.location.href = "/login"
+
+                }
+                if (r.status === 409) {
+                    alert("Bu email ilə artiq qeydiyyat olunub!");
+                    setToggle(false)
                 }
                 else {
                     r.json().then(r => {
+                        setToggle(false)
                         setError(prevState => ({
                             ...prevState,
                             name: r.name,
@@ -67,25 +60,21 @@ const AuthPrivader = ({ children }) => {
                         }));
                     })
                 }
-
-            })
+            }).catch(e)
         }
         else {
             alert("Zəhmət olmasa bütün xanaları doldurun")
         }
 
-        setToggle(false)
     };
 
     const handleLoginSubmit = e => {
         e.preventDefault();
 
-        let loginform;
-
         if (email !== "" & password !== "") {
 
             setToggle(true)
-            loginform = { email, password }
+            let loginform = { email, password }
 
             fetch(`${url}/auth/login`, {
                 method: "POST",
@@ -96,11 +85,13 @@ const AuthPrivader = ({ children }) => {
             }).then(r => {
 
                 if (r.ok) {
-                    // localStorage.setItem("135678", true)
-                    window.location.href = "/"
-
+                    window.location.href = "/profile"
                     setToggle(false)
-                    r.json().then(r => console.log(r.userInfo))
+                    localStorage.setItem("time", new Date().getTime() + (4 * 60 * 60 * 1000))
+                    r.json().then(r => {
+                        localStorage.setItem("logged", true)
+                        localStorage.setItem('email', r.email)
+                    })
 
                 }
                 else if (r.status === 400) {
@@ -118,7 +109,7 @@ const AuthPrivader = ({ children }) => {
                     })
                     setToggle(false)
                 }
-            })
+            }).catch(e => { })
 
         }
         else {
@@ -127,8 +118,70 @@ const AuthPrivader = ({ children }) => {
 
     }
 
+
+    const sendotpForUpdatePassword = () => {
+        setToggle(true)
+        if (email === "") {
+            alert("Zəhmət olmasa email xanasını doldurun!");
+            setToggle(false)
+            return;
+        }
+
+        fetch(`${url}/auth/send-otp/${email}`).then(r => {
+            if (r.ok) {
+                window.location.href = "/updatepassword";
+                setToggle(false)
+            } else {
+                setToggle(false);
+                alert("Xəta baş verdi biraz sonra yenidən cəhd edin")
+            }
+        }).catch(e => { });
+
+
+    }
+
+
+    const updatepassword = () => {
+
+        if (otp === "" || password === "" || conformPassword == "") {
+            alert("Zəhmət olmasa xanaları doldurun!");
+            return;
+        }
+        if (password != conformPassword) {
+            alert("Parollar uyğun gəlmir");
+        }
+
+        let updatePasswordForm = { otp, password }
+
+        fetch(`${url}/auth/update-password`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(updatePasswordForm)
+        }).then(r => {
+            if (r.ok) {
+                alert("ugurlu")
+                window.location.href = "/login"
+            }
+            else {
+                r.json().then(r => {
+                    setError(prevState => ({
+                        ...prevState,
+                        otp: r.otp,
+                        password: r.password,
+                    }));
+                })
+            }
+        }).catch(e => { })
+    }
+
     return (
-        <AuthContext.Provider value={{ setName, error, setSurname, setPassword, setEmail, setPhone_number, handleRegistSubmit, handleLoginSubmit, handleChangeLogin, toggle }}>
+        <AuthContext.Provider value={{
+            setName, error, setSurname, setPassword, setEmail, setPhone_number,
+            handleRegistSubmit, handleLoginSubmit, toggle,
+            sendotpForUpdatePassword, setOtp, updatepassword, setConformPassword
+        }}>
             {children}
         </AuthContext.Provider>
     )
