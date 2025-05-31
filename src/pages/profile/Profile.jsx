@@ -5,11 +5,26 @@ import { Navbar } from '../../components/navbar/Navbar';
 
 export const Profile = () => {
 
-  const url = process.env.REACT_APP_URL
+  const url = process.env.REACT_APP_URL;
+  let email = localStorage.getItem('email');
+
+  const sendotp = () => {
+    fetch(`${url}/auth/otpCode/${email}`, {
+      method: "GET",
+      credentials: "include"
+    }).then(r => {
+      if (r.ok) {
+        alert("Göndərildi")
+      }
+      else {
+        alert("Xəta oldu birazdan birdə cəhd edin")
+      }
+    }).catch(e => { })
+
+  }
 
 
   useEffect(() => {
-    let email = localStorage.getItem('email')
 
     if (email) {
       fetch(`${url}/auth/${email}`).then(r => r.json())
@@ -76,8 +91,10 @@ export const Profile = () => {
       <Navbar />
 
       {user.verified ? "" : <div className="alert alert-danger" role="alert">
-        Zəhmat olmasa emailnizi tesdiq edin!
-      </div>}
+        <p> Zəhmat olmasa emailnizi tesdiq edin!</p>
+        <button onClick={sendotp} className='btn btn-primary'>Yenidən göndər</button>
+      </div>
+      }
       <div className="container my-5">
         {/* Profile Header */}
         <div style={{ maxWidth: "640px" }} className="card mb-4 shadow-sm">

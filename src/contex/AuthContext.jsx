@@ -176,6 +176,9 @@ const AuthPrivader = ({ children }) => {
         }).catch(e => { })
     }
 
+   
+
+
     return (
         <AuthContext.Provider value={{
             setName, error, setSurname, setPassword, setEmail, setPhone_number,

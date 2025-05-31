@@ -42,9 +42,15 @@ export const Contact = () => {
                         setMessage("")
 
                     }
+                    else {
+                        Swal.fire('Xəta', 'Mesaj göndərilə bilmədi', 'error');
+                    }
                 })
             }
-            
+            else {
+                Swal.fire('Xəbərdarlığ', 'Zəhmət olmasa xanaları doldurun', 'info');
+            }
+
         } catch (error) {
             setToggle(false)
             Swal.fire('Server Xətası', 'Zəhmət olmasa yenidən cəhd edin.', 'warning');

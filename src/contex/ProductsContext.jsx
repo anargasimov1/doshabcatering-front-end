@@ -12,9 +12,9 @@ const ProductsProvider = ({ children }) => {
     const [toggle, setToggle] = useState(false);
     const [modal, setModal] = useState(false);
     const [sum, setSum] = useState(0.00);
-    const [location, setLocation] = useState({ lat: null, lon: null, error: null });
 
-    useEffect(() => { getCategorys(); getProducts(); getSum(); getLocation() }, []);
+
+    useEffect(() => { getCategorys(); getProducts(); getSum() }, []);
 
     const getProducts = () => fetch(`${url}/public/meals`).then(r => r.json()).then(g => setProducts(g));
 
@@ -30,25 +30,26 @@ const ProductsProvider = ({ children }) => {
         return products;
     }
 
-    const getLocation = () => {
-
-        if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    setLocation({
-                        lat: position.coords.latitude,
-                        lon: position.coords.longitude,
-                        error: null,
-                    });
-                },
-                (error) => {
-                    setLocation({ lat: null, lon: null, error: error.message });
-                }
-            );
-        } else {
-            setLocation({ lat: null, lon: null, error: "Geolocation not supported" });
-        }
+    const getLocationAsync = () => {
+        return new Promise((resolve, reject) => {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        resolve({
+                            lat: position.coords.latitude,
+                            lon: position.coords.longitude,
+                        });
+                    },
+                    (error) => {
+                        reject(error.message);
+                    }
+                );
+            } else {
+                reject("Geolocation not supported");
+            }
+        });
     };
+
 
 
     const countPlus = id => {
@@ -110,6 +111,11 @@ const ProductsProvider = ({ children }) => {
 
     const removeProductIsLocal = id => {
         let allProducts = getLocalStronge();
+        let ids = localStorage.getItem("clickedButtons");
+        let parsedIds = JSON.parse(ids);
+        parsedIds[id] = false;
+        localStorage.setItem("clickedButtons", JSON.stringify(parsedIds))
+
         let filtered = allProducts.filter(i => i.id !== id);
         localStorage.setItem("products", JSON.stringify(filtered));
         setToggle(!toggle);
@@ -119,59 +125,68 @@ const ProductsProvider = ({ children }) => {
 
     const select = category => products.filter(i => i.category.name.includes(category));
 
-    const send = () => {
-        setModal(true)
+    const send = async () => {
+
+        setModal(true);
+
+        let email = localStorage.getItem("email");
+        if (!email) {
+            alert("Zəhmət olmasa login olun!");
+            setModal(false);
+            return;
+        }
 
         let meals = getLocalStronge();
-        let copyMeals = [];
-        let email = localStorage.getItem("email")
+        let copyMeals = meals.map(m => `Məhsul: ${m.name} sayı: ${m.count}`);
 
-        for (let i = 0; i < meals.length; ++i) {
-            copyMeals.push("Məhsul  " + meals[i].name + " sayı " + meals[i].count)
+        let location;
+        try {
+            location = await getLocationAsync();
+        } catch (err) {
+            setModal(false);
+            alert("Geolokasiya alınmadı: " + err);
+            return;
         }
 
         let details = {
             meals: copyMeals.toString(),
             prince: sum.toFixed(2),
             lat: location.lat,
-            lng: location.lon
-
-        }
+            lng: location.lon,
+        };
 
 
         fetch(`${url}/orders/${email}`, {
             method: "POST",
             credentials: "include",
             headers: {
-                "Content-Type": "application/json"
-                // "Authorization": `Bearer ${token}`
+                "Content-Type": "application/json",
             },
-            body: JSON.stringify(details)
-        }).then(r => {
+            body: JSON.stringify(details),
+        }).then((r) => {
             if (r.ok) {
                 localStorage.removeItem("products");
+                localStorage.setItem("clickedButtons", JSON.stringify({}));
                 setModal(false);
                 Swal.fire(
-                    'Təşəkkürlər!',
-                    'Sifarişiniz qəbul olundu 🚀',
-                    'success'
+                    "Təşəkkürlər!",
+                    "Sifarişiniz qəbul olundu 🚀",
+                    "success"
+                );
+            } else if (r.status === 403) {
+                setModal(false);
+                alert("Zəhmət olmasa emaili təsdiq edin!");
+            } else if (r.status === 401) {
+                setModal(false);
+                Swal.fire(
+                    "Xəta!",
+                    "Sifarişiniz qəbul olunmadı",
+                    "warning"
                 );
             }
-            if (r.status === 403) {
-                setModal(false);
-                alert("Zəhmət olmasa emaili təsdiq edin!")
+        }).catch(e => { })
+    };
 
-            }
-            if (r.status === 401) {
-                setModal(false);
-                Swal.fire(
-                    'Xəta!',
-                    'Sifarişiniz qəbul olunmadı',
-                    'warning'
-                );
-            }
-        })
-    }
 
 
 
@@ -180,7 +195,7 @@ const ProductsProvider = ({ children }) => {
             categorys, select, category,
             setCategory, addProductToLocalStronge,
             getLocalStronge, countPlus, toggle, countMinus,
-            sum, getSum, send, removeProductIsLocal, getLocation, location, modal
+            sum, getSum, send, removeProductIsLocal, modal
         }}>
             {children}
         </ProductsContext>

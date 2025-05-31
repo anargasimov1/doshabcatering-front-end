@@ -18,6 +18,19 @@ export const Shop = () => {
 
 
   const conformOrder = () => {
+
+    const now = new Date();
+    const hours = now.getHours();
+    if (hours < 10 || hours >= 17) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Sifariş saatı bitib!',
+        text: 'Sifarişlər yalnız 10:00 - 17:00 arası qəbul olunur.',
+      });
+      return;
+    }
+
+
     Swal.fire({
       title: 'Sifarişi təsdiq edirsiniz?',
       html: `
@@ -63,7 +76,7 @@ export const Shop = () => {
 
                       <div className="card-body">
                         <div>
-                          <img style={{ width: "60%", marginBottom: "5px" }} src={product.imageUrl} alt="##" />
+                          <img style={{ width: "80%", marginBottom: "5px", maxHeight: "150px", objectFit: "cover" }} src={product.imageUrl} alt="##" />
                         </div>
                         <div>
                           <h5 className="card-title">{product.name}</h5>
